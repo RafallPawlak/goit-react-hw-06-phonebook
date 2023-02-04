@@ -1,33 +1,67 @@
 import PropTypes from "prop-types";
+import { nanoid } from 'nanoid';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/actions';
 import style from './ContactForm.module.css';
 
-export const ContactForm = ({onSubmit}) => (
-            <form onSubmit={onSubmit}>
-                <label className={style.title}>Name
-                    <input className={style.input}
-                        type="text"
-                        name="name"
-                        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                        required
-                    />
-                </label>
-                <label  className={style.title}>Number
-                    <input className={style.input}
-                        placeholder="000-00-00"
-                        type="tel"
-                        name="number"
-                        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                        required
-                    />
-                </label>
-                <button className={style.button} type="submit">
-                    Add contact
-                </button>
-            </form>
-        );
+export const ContactForm = () => {
+    const contacts = useSelector(getContacts);
+    const dispatch = useDispatch();
+  
+    const handleSubmit = event => {
+        event.preventDefault();
+        const form = event.target;
+        const { name, number } = form.elements;
+
+        const contact = {
+            id: nanoid(),
+            name: name.value,
+            number: number.value,
+        };
+
+    if (contacts.find(contact => contact.name === name.value)) {
+      Report.warning(
+        'Phonebook Warning',
+        'The contact already exists with this name',
+        'Okay',
+      );
+      return;
+        }
+    dispatch(addContact(contact));
+    localStorage.setItem('contacts', JSON.stringify([...contacts, contact]));
+    form.reset();
+    };
+    
+    return (
+        <form onSubmit={handleSubmit}>
+            <label className={style.title}>Name
+                <input className={style.input}
+                    type="text"
+                    name="name"
+                    pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+                    title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+                    required
+                />
+            </label>
+            <label className={style.title}>Number
+                <input className={style.input}
+                    placeholder="000-00-00"
+                    type="tel"
+                    name="number"
+                    pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+                    title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+                    required
+                />
+            </label>
+            <button className={style.button} type="submit">
+                Add contact
+            </button>
+        </form>
+    );
+}
 
 ContactForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func,
 };
