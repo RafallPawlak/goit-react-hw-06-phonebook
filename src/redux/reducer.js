@@ -7,10 +7,10 @@ const contactsInitialState = JSON.parse(storageContacts) || [];
 
 export const contactsReducer = createReducer(contactsInitialState, {
   [addContact]: (state, action) => {
-    state.push(action.payload);
+    return [...state, action.payload];
   },
   [deleteContact]: (state, action) => {
-    state.filter(contact => contact.id !== action.payload);
+    return state.filter(contact => contact.id !== action.payload);
   },
 });
 

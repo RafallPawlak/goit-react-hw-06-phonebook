@@ -11,10 +11,9 @@ export const ContactList = () => {
     const dispatch = useDispatch();
 
     const handleDelete = id => {
-        dispatch(deleteContact(id));
         localStorage.setItem('contacts', JSON.stringify(contacts.filter(contact => contact.id !== id)));
+        dispatch(deleteContact(id));
     }
-
     const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
