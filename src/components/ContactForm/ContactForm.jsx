@@ -1,9 +1,8 @@
-import PropTypes from "prop-types";
 import { nanoid } from 'nanoid';
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/actions';
+import { addContact } from 'redux/contactsSlice';
 import style from './ContactForm.module.css';
 
 export const ContactForm = () => {
@@ -30,7 +29,6 @@ export const ContactForm = () => {
       return;
         }
     dispatch(addContact(contact));
-    localStorage.setItem('contacts', JSON.stringify([...contacts, contact]));
     form.reset();
     };
     
@@ -61,7 +59,3 @@ export const ContactForm = () => {
         </form>
     );
 }
-
-ContactForm.propTypes = {
-    onSubmit: PropTypes.func,
-};

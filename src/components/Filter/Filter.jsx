@@ -1,13 +1,12 @@
-import PropTypes from "prop-types";
 import { useDispatch } from 'react-redux';
-import { setFilter } from 'redux/actions';
+import { setFilter } from 'redux/filterSlice';
 import style from './Filter.module.css';
 
 export const Filter = () => {
     const dispatch = useDispatch();
     
     const inputFilter = event => {
-        const value = event.target.value.toLowerCase();
+        const value = event.target.value;
         dispatch(setFilter(value));
     }
     return (
@@ -17,8 +16,3 @@ export const Filter = () => {
         </label>
     );
 }
-
-Filter.propTypes = {
-    onChange: PropTypes.func,
-};
-

@@ -1,20 +1,18 @@
-import PropTypes from "prop-types";
 import { Report } from 'notiflix/build/notiflix-report-aio';
 import { getFilter, getContacts } from 'redux/selectors';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/actions';
+import { deleteContact } from 'redux/contactsSlice';
 import style from './ContactList.module.css';
 
 export const ContactList = () => {
     const contacts = useSelector(getContacts);
-    const filter = useSelector(getFilter);
+    const filters = useSelector(getFilter);
     const dispatch = useDispatch();
 
     const handleDelete = id => {
-        localStorage.setItem('contacts', JSON.stringify(contacts.filter(contact => contact.id !== id)));
         dispatch(deleteContact(id));
     }
-    const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase())
+    const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filters.toLowerCase())
   );
 
   return (
@@ -37,15 +35,3 @@ export const ContactList = () => {
     </>
     )    
 }
-
-ContactList.propTypes = {
-    contacts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            number: PropTypes.string.isRequired,
-        }),
-    ),
-    handleDelete: PropTypes.func,
-};
-
